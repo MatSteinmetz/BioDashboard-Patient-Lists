@@ -1,12 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Patient Dashboard</title>
-  </head>
-  <body class="bg-slate-900">
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Care Coordination Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+  <div class="main-header">
+    <div class="logo">
+      <span style="font-size:2em;font-weight:500;color:#fff;letter-spacing:0.01em;">BioDashboard</span>
+    </div>
+    <div class="search-bar">
+      <input type="text" placeholder="Enter Search Term..." />
+    </div>
+    <div class="user-info">
+      <span class="tenant" onclick="alert('Choose tenant')">CHOOSE TENANT</span>
+      <span>Last Login: 05/02/2025 14:10 MDT</span>
+      <span class="logout" onclick="alert('Logging out')">LOG OUT</span>
+    </div>
+  </div>
+  <div class="filter-bar">
+    <div class="filter-group">
+      <label for="facility">Unit</label>
+      <select id="facility">
+        <option>2 items selected</option>
+        <option>General Hospital</option>
+        <option>City Medical Center</option>
+        <option>Westside Clinic</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="filter">Filter</label>
+      <select id="filter">
+        <option>No Filter Selected</option>
+        <option>Multiple Filters</option>
+      </select>
+    </div>
+    <div class="filter-group">
+      <label for="orderBy">Order By</label>
+      <select id="orderBy">
+        <option>Notifications</option>
+        <option>LOS</option>
+      </select>
+    </div>
+    <div class="last-updated">
+      <span id="lastUpdated">Last Update: --</span>
+      <button class="refresh-btn" onclick="updateDashboard()" title="Refresh">&#x21bb;</button>
+    </div>
+  </div>
+  <div class="container">
+    <div class="dashboard-controls">
+      <div class="view-toggle">
+        <button id="listViewBtn" class="active" onclick="setView('list')">List View</button>
+        <button id="tileViewBtn" onclick="setView('tile')">Tile View</button>
+      </div>
+      <div class="model-selector">
+        <button class="active" onclick="selectModel(this, 'Rounding Optimization')">Rounding Optimization</button>
+        <button onclick="selectModel(this, 'Length of Stay')">Length of Stay</button>
+        <button onclick="selectModel(this, 'Unit Manager')">Unit Manager</button>
+        <button onclick="selectModel(this, 'Good Catch Report')">Good Catch Report</button>
+      </div>
+    </div>
+    <div id="listViewSection" style="overflow-x:auto;">
+      <table id="dashboardTable">
+        <thead>
+          <tr>
+            <th>Rounded</th>
+            <th>Unit</th>
+            <th>Last Name</th>
+            <th>First Name</th>
+            <th>MRN</th>
+            <th>Bio ID</th>
+            <th>Room</th>
+            <th style="text-align:center;">BioButton<br>Data</th>
+            <th style="text-align:center;">% On Body</th>
+            <th class="stacked-cell" style="text-align:center;">Clinical Notif<br>(24h)</th>
+            <th class="stacked-cell" style="text-align:center;">Activity<br>(min, 24h)</th>
+            <th style="text-align:center;">Live Activity<br>(2m)</th>
+            <th style="text-align:center;">Status</th>
+            <th style="text-align:center;">HR</th>
+            <th style="text-align:center;">RR</th>
+            <th style="text-align:center;">Temp</th>
+            <th style="text-align:center;">Activity<br>Minutes<br>Past Hour</th>
+            <th class="stacked-cell" style="text-align:center;">Notifications</th>
+            <th class="stacked-cell" style="text-align:center;">Notification<br>Reviews</th>
+            <th style="text-align:center;">Last Update</th>
+          </tr>
+        </thead>
+        <tbody id="dashboardBody">
+          <!-- Rows will be inserted here by JS -->
+        </tbody>
+      </table>
+    </div>
+    <div id="tileViewSection" style="display:none;">
+      <div class="tile-grid" id="tileGrid">
+        <!-- Tiles will be inserted here by JS -->
+      </div>
+    </div>
+  </div>
+  <div id="patient-detail-overlay" style="display:none;position:fixed;top:0;left:0;width:100vw;height:100vh;z-index:1000;background:rgba(20,30,50,0.85);backdrop-filter:blur(8px);overflow-y:auto;">
+    <div style="max-width:1200px;margin:40px auto;background:#22304a;border-radius:16px;box-shadow:0 4px 32px rgba(0,0,0,0.3);padding:32px;position:relative;">
+      <button id="patient-detail-close" style="position:absolute;top:24px;right:32px;font-size:2rem;background:none;border:none;color:#fff;cursor:pointer;">&times;</button>
+      <button id="patient-detail-back" style="position:absolute;top:24px;left:32px;font-size:1.2rem;background:#2a3b5a;border:none;color:#fff;padding:8px 16px;border-radius:8px;cursor:pointer;">&larr; Back</button>
+      <div id="patient-detail-content">
+        <!-- Patient detail content will be injected here -->
+      </div>
+    </div>
+  </div>
+  <script src="dashboard.js"></script>
+</body>
 </html> 
